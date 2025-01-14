@@ -16,7 +16,7 @@ def connect_to_gsheet():
     client = gspread.authorize(creds)
     
     # Open the Google Sheet (replace with your actual sheet name)
-    sheet = client.open("Your Google Sheet Name").sheet1
+    sheet = client.open("QC Fillable Form").sheet1
     return sheet
 
 # Streamlit app
