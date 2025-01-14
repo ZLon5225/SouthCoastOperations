@@ -5,14 +5,22 @@ from datetime import datetime
 
 # Google Sheets setup
 def connect_to_gsheet():
+    # Define the scope for Google Sheets and Google Drive
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-    creds = ServiceAccountCredentials.from_json_keyfile_name("southcoastoperations-49e163334165.json", scope)
+    
+    # Load credentials from Streamlit secrets
+    creds_dict = st.secrets["google_service_account"]
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+    
+    # Authorize the client
     client = gspread.authorize(creds)
-    sheet = client.open("QC Fillable Form").sheet1  # Replace with your Google Sheet name
+    
+    # Open the Google Sheet (replace with your actual sheet name)
+    sheet = client.open("Your Google Sheet Name").sheet1
     return sheet
 
 # Streamlit app
-st.title("South Coast Canine - Employee Responsiblities")
+st.title("South Coast Canine - Quality Control")
 
 # Form
 with st.form("quality_control_form"):
@@ -33,6 +41,7 @@ with st.form("quality_control_form"):
 
 # Handle form submission
 if submitted:
+    # Collect the data
     data = {
         "Timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "Employee": employee,
@@ -45,9 +54,10 @@ if submitted:
         "Calendar Checked": calendar_checked
     }
     
+    # Notify the user of successful submission
     st.success("Quality control report submitted successfully!")
     
-    # Save data to Google Sheets
+    # Save the data to Google Sheets
     try:
         sheet = connect_to_gsheet()
         sheet.append_row(list(data.values()))
