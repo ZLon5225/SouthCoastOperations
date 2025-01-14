@@ -7,7 +7,7 @@ st.set_page_config(page_title="South Coast Canine - Quality Control", layout="ce
 
 # Add header with logo and title
 st.image("South Coast Canine_8e.jpg", width=100)
-st.title("South Coast Canine - Quality Control")
+st.title("South Coast Canine - Employee Checklist")
 
 # Define the form
 with st.form("quality_control_form"):
