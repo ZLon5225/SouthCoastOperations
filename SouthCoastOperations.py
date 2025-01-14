@@ -20,7 +20,7 @@ def connect_to_gsheet():
     return sheet
 
 # Streamlit app
-st.title("South Coast Canine - Quality Control")
+st.title("South Coast Canine - Employee Responsiblities")
 
 # Form
 with st.form("quality_control_form"):
