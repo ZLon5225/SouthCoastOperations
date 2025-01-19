@@ -24,12 +24,44 @@ st.title("South Coast Canine - Facility Checklist")
 
 # Form
 with st.form("quality_control_form"):
-    st.subheader("Daily and Weekly Checklist")
+    st.subheader("Daily Checklist")
+
+    # Employee selection
+    employee = st.selectbox(
+        "Who is completing this form?",
+        ["Kimberly", "Brittany", "Anastasia", "Landen", "Ashley"]
+    )
 
     # Building selection
     building = st.selectbox("Select the Building", ["New Building", "Old Building", "House"])
 
-    # Daily checklist
+    # Original checklist items
+    st.subheader("Original Daily Tasks")
+    original_tasks = [
+        "Have all dogs been fed and given clean water?",
+        "Have all bowls been washed?",
+        "Has the small yard been scooped?",
+        "Has the big yard been scooped?",
+        "Have pictures been taken?",
+        "Is Trello updated?",
+        "Is the calendar checked and updated?"
+    ]
+
+    original_answers = {}
+    original_comments = {}
+
+    for task in original_tasks:
+        col1, col2 = st.columns([2, 1])
+        with col1:
+            original_answers[task] = st.selectbox(
+                task,
+                ["Select Answer", "Yes", "No"],
+                key=f"original_{task}"
+            )
+        with col2:
+            original_comments[task] = st.text_input(f"Comments for {task}", key=f"original_{task}_comments")
+
+    # Daily checklist for buildings
     st.subheader(f"Daily Checklist - {building}")
     daily_tasks = [
         "A/C Filters Cleaned",
@@ -53,8 +85,29 @@ with st.form("quality_control_form"):
         with col2:
             daily_comments[task] = st.text_input(f"Comments for {task}", key=f"{building}_{task}_daily_comments")
 
-    # Weekly checklist
-    st.subheader(f"Weekly Checklist - {building}")
+    # Additional daily tasks
+    st.subheader("Additional Daily Tasks")
+    additional_tasks = [
+        "Empty Poop Buckets",
+        "Set A/C or Heat to Appropriate Temperature After Checking Weather Forecast"
+    ]
+
+    additional_answers = {}
+    additional_comments = {}
+
+    for task in additional_tasks:
+        col1, col2 = st.columns([2, 1])
+        with col1:
+            additional_answers[task] = st.selectbox(
+                task,
+                ["Select Answer", "Yes", "No"],
+                key=f"additional_{task}"
+            )
+        with col2:
+            additional_comments[task] = st.text_input(f"Comments for {task}", key=f"additional_{task}_comments")
+
+    # Weekly checklist for buildings
+    st.subheader("Weekly Duties (To Be Completed Weekly)")
     weekly_tasks = [
         "All Kennels Pulled and Cleaned Under and Behind",
         "Clean Upper Kennel Area",
@@ -80,58 +133,44 @@ with st.form("quality_control_form"):
         with col2:
             weekly_comments[task] = st.text_input(f"Comments for {task}", key=f"{building}_{task}_weekly_comments")
 
-    # Additional daily checklist
-    st.subheader("Additional Daily Tasks")
-    additional_tasks = [
-        "Empty Poop Buckets",
-        "Set A/C or Heat to Appropriate Temperature After Checking Weather Forecast"
-    ]
-
-    additional_answers = {}
-    additional_comments = {}
-
-    for task in additional_tasks:
-        col1, col2 = st.columns([2, 1])
-        with col1:
-            additional_answers[task] = st.selectbox(
-                task,
-                ["Select Answer", "Yes", "No"],
-                key=f"additional_{task}"
-            )
-        with col2:
-            additional_comments[task] = st.text_input(f"Comments for {task}", key=f"additional_{task}_comments")
-
     # Submit button
     submitted = st.form_submit_button("Submit")
 
 # Handle form submission
 if submitted:
     # Validate all questions are answered
-    if any(
-        answer == "Select Answer"
-        for answer in list(daily_answers.values())
+    all_answers = (
+        list(original_answers.values())
+        + list(daily_answers.values())
         + list(weekly_answers.values())
         + list(additional_answers.values())
-    ):
+    )
+    
+    if any(answer == "Select Answer" for answer in all_answers):
         st.error("Please select an answer for all checklist items before submitting.")
     else:
         # Collect the data
         data = {
             "Timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "Employee": employee,
             "Building": building
         }
+
+        for task, answer in original_answers.items():
+            data[f"Original - {task}"] = answer
+            data[f"Original - {task} Comments"] = original_comments[task]
 
         for task, answer in daily_answers.items():
             data[f"Daily - {task}"] = answer
             data[f"Daily - {task} Comments"] = daily_comments[task]
 
-        for task, answer in weekly_answers.items():
-            data[f"Weekly - {task}"] = answer
-            data[f"Weekly - {task} Comments"] = weekly_comments[task]
-
         for task, answer in additional_answers.items():
             data[f"Additional - {task}"] = answer
             data[f"Additional - {task} Comments"] = additional_comments[task]
+
+        for task, answer in weekly_answers.items():
+            data[f"Weekly - {task}"] = answer
+            data[f"Weekly - {task} Comments"] = weekly_comments[task]
 
         # Notify the user of successful submission
         st.success("Checklist report submitted successfully!")
