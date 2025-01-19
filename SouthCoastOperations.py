@@ -36,7 +36,7 @@ with st.form("quality_control_form"):
     building = st.selectbox("Select the Building", ["New Building", "Old Building", "House"])
 
     # Combined Daily Duties
-    st.subheader("Daily Duties")
+    st.subheader("Daily Tasks")
     daily_tasks = [
         "Have all dogs been fed and given clean water?",
         "Have all bowls been washed?",
@@ -69,7 +69,7 @@ with st.form("quality_control_form"):
             daily_comments[task] = st.text_input("Optional Comments", key=f"{building}_{task}_daily_comments")
 
     # Weekly checklist for buildings
-    st.subheader("Twice Weekly Tasks)")
+    st.subheader("Twice Weekly Tasks")
     weekly_tasks = [
         "All Kennels Pulled and Cleaned Under and Behind",
         "Clean Upper Kennel Area",
