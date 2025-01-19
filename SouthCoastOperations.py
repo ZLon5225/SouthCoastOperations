@@ -66,10 +66,10 @@ with st.form("quality_control_form"):
                 key=f"{building}_{task}_daily"
             )
         with col2:
-            daily_comments[task] = st.text_input(f"Comments for {task}", key=f"{building}_{task}_daily_comments")
+            daily_comments[task] = st.text_input("Optional Comments", key=f"{building}_{task}_daily_comments")
 
     # Weekly checklist for buildings
-    st.subheader("Weekly Duties (To Be Completed Weekly)")
+    st.subheader("Twice Weekly Tasks)")
     weekly_tasks = [
         "All Kennels Pulled and Cleaned Under and Behind",
         "Clean Upper Kennel Area",
@@ -93,7 +93,7 @@ with st.form("quality_control_form"):
                 key=f"{building}_{task}_weekly"
             )
         with col2:
-            weekly_comments[task] = st.text_input(f"Comments for {task}", key=f"{building}_{task}_weekly_comments")
+            weekly_comments[task] = st.text_input("Optional Comments", key=f"{building}_{task}_weekly_comments")
 
     # Submit button
     submitted = st.form_submit_button("Submit")
